@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Annochat</title>
+  <!-- <script src="http://127.0.0.1:3000//socket.io/socket.io.js"></script> -->
+  <!-- <a href="http://127.0.0.1:3000/otv" class="option">One-to-One Chat</a> -->
+  <!-- <script src="http://localhost:3000/socket.io/socket.io.js"></script> -->
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      background-image: linear-gradient(rgb(3, 20, 35),rgb(141, 81, 186));
+      flex-direction: column;
+      height: 100vh;
+    } 
+    #logo{
+          height: auto;
+          width: 6%;
+          float: right;
+          margin: -67px 491px;;
+          position:relative;
+          
+}
+    header {
+      background-color: #1b1919;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-family: 'Courier New', Courier, monospace;
+    font-size: 2em;
+    font-weight: bold;
+      
+    }
+    #totaljanta{
+      position: relative;
+      top: -20px;
+      float: right;
+    }
+    .chatBox {
+      flex-grow: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+    
+    /* .message {
+      margin-bottom: 10px;
+      padding: 5px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+    }
+    
+    .message.sent {
+      align-self: flex-end;
+      color: white;
+    } */
+    .message.send {
+    text-align: right;
+    color: #fff;
+    background-color: #007bff;
+  }  
+    .left{
+    background-color: #5b9191;
+    text-align: left;
+    margin-bottom: 2px;
+  }
+  .middle{
+    background-color: #fff;
+    margin: 2px;
+    text-align: center;
+    font-weight: bold;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  .right{
+    background-color: #b4b8bd;
+    text-align: right; 
+    margin-bottom: 2px;
+  }
+    
+    .bhejo{
+      display: flex;
+      padding: 10px;
+      background-color: #f2f2f23d;
+    }
+    
+    .bhejo input{
+      flex-grow: 1; 
+      padding: 5px;
+      border: none;
+      border-radius: 5px; 
+    }
+    
+    .bhejo button{
+      background-color: #007bff;
+      float: right;
+      margin-left: 7px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      /* padding: 5px 10px; */
+      /* margin-left: 10px; */
+      cursor: pointer;
+    }
+    
+    .start-new-chat {
+      text-align: center;
+      padding: 10px;
+      background-color: #1b1919;
+      border-top: 1px solid #ccc;
+      cursor: pointer;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }#actionbutton
+    {
+      background-color: #fff;
+      font-style: normal;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Annonly
+    <img id="logo" src="/annochat3.png">
+  </header>
+  <div class="chatBox" id="chatBox">
+    <div id="totaljanta"></div>
+    <!-- <div class="message"> -->
+      <div class="message right"></div></div>
+      <div class="message middle"><div>
+      <div class="message left"></div>
+  </div>    
+  <form id="chatform" >
+  <div class="bhejo">
+    <input type="text" id="input" placeholder="Type your message...">
+    <button type="submit" id="send" onclick="sendMessage()">Send</button>
+  </form></div>
+  <div class="start-new-chat">
+    <button id="actionbutton" onclick="performAction()">START-NEW-CHAT</button>
+  </div>
+</body><script>
+  var socket = io();
+  var isactivechat = false;
+  const offensiveWords = ["loda","bhenchod","madarchod","land","chutiya","chutiye","chut","bhosdina","lode"]
+  // var x = prompt("enter your nickname");
+  // socket.emit('sendusername',x);
+
+  document.getElementById("chatform").addEventListener("click", function(event){
+  event.preventDefault()
+});
+const elemnt = document.getElementById('chatBox');
+elemnt.scrollIntoView();
+// elemnt.scrollIntoView({behavior:"smooth",block:"end",inline:"nearest"});
+
+function performAction(){
+if( isactivechat){
+  endchat();
+} else{
+    addlist();
+  };
+};
+  function addlist(){
+    socket.emit('addlist',socket.id);
+    ClearChatBox();
+    isactivechat = true;
+    updateactionbtn('ENDCHAT');
+  }
+  function updateactionbtn(text){
+    const actionbutton =document.getElementById('actionbutton');
+    actionbutton.textContent =text;
+
+  }
+  function ClearChatBox() {
+const chatMessages = document.getElementById('chatBox');
+    chatMessages.innerHTML='';
+};
+function endchat(){
+  // socket.emit('endchat',socket.id)
+  location.reload();
+  // isactivechat= false;
+  // updateactionbtn();
+}
+function filterOffensiveWords(message) {
+    for (const word of offensiveWords) {
+        const regex = new RegExp(`\\b${word}\\b`, 'gi'); // Use word boundaries and case-insensitive flag
+        message = message.replace(regex, '* '.repeat(word.length));
+    }
+    return message;
+}
+  function sendMessage(){
+      const messageINput = document.getElementById('input')
+      let msg = messageINput.value.trim();
+      // const userName = x;
+
+      if (msg !== ''){
+        msg = filterOffensiveWords(msg)
+
+        socket.emit('sendMessage',msg );
+        messageINput.value = '';
+        // const y = value;
+      
+      const chatMessages = document.getElementById('chatBox');
+      const li = document.createElement('li');
+      li.textContent =msg;
+      li.classList.add('right');
+      chatMessages.appendChild(li);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+  }
+  socket.on('partnerjoined',()=>{
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = `you are connected to Stranger`;
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
+  });
+  socket.on('waitmf',()=>{
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = 'connecting...pls wait';
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
+  });
+  socket.on('waitbf',()=>{
+    const chatMessages = document.getElementById('chatBox');
+    chatMessages.innerHTML='';
+  })
+  socket.on('userleft',()=>{
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = `Stranger left the chat`;
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
+  })
+socket.on('recieveMessage', (data) => {
+console.log(`recieved msg is ${data.msg}`);
+const chatMessages = document.getElementById('chatBox');
+const li = document.createElement('li');
+li.textContent = `Stranger: ${data.msg}`;
+li.classList.add('left');
+chatMessages.appendChild(li);
+chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+   socket.on('totaljanta',(data)=>{
+    const janta = document.getElementById('totaljanta');
+    janta.innerHTML= `people:${data}`;
+   })
+</script>
+</html>
