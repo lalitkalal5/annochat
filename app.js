@@ -19,6 +19,9 @@ app.get('/otv',(req,res)=>{
 app.get('/grp',(req,res)=>{
     res.sendFile(__dirname+'/public/group.html')
 });
+app.get('/contact',(req,res)=>{
+    res.sendFile(__dirname+'/public/contacts.html')
+});
 const waitingUsers = [];
 let roomCounter = 1;
 totaljanta =[];
