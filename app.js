@@ -21,8 +21,11 @@ app.get('/grp',(req,res)=>{
 });
 const waitingUsers = [];
 let roomCounter = 1;
-totaljanta =[]
-// const users = [];
+totaljanta =[];
+const users = {};
+const userRooms = {};
+
+
 
 io.on('connection', (socket) => {
     console.log("a user connected", socket.id);
@@ -90,6 +93,14 @@ socket.on('addlist',(data)=>{
         // users.pop(x);
         io.to(socket.room).emit('userleft');
         socket.leave(socket.room);
+      const disconnectedRoom = userRooms[socket.id];
+        // console.log(disconnectedRoom);
+        if (disconnectedRoom){
+        const disconnectedUsername = users[socket.id];
+        // console.log(disconnectedUsername);
+        socket.to(disconnectedRoom).emit('chhodgya',disconnectedUsername);
+            delete userRooms[socket.id];
+        }
         totaljanta.pop(socket.id);
         // const partnerSocket = io.sockets.sockets.get(partnerSocketId);
         // partnerSocket.leave(socket.room);
@@ -127,6 +138,7 @@ socket.on('addlist',(data)=>{
               socket.leave(room);
               io.to(room).emit('chhodgya',x);
               socket.join(ce);
+            userRooms[socket.id] = ce;
               socket.emit('khalikaro');
               io.to(ce).emit('brdcastce',x);
             }}}
@@ -140,6 +152,7 @@ socket.on('addlist',(data)=>{
               socket.leave(room);
               io.to(room).emit('chhodgya',x);
               socket.join(genral);
+            userRooms[socket.id] = genral;
               socket.emit('khalikaro');
             io.to(genral).emit('brdcastg',x);
             }}};    
@@ -153,6 +166,7 @@ socket.on('addlist',(data)=>{
               socket.leave(room);
               io.to(room).emit('chhodgya',x);
               socket.join(coding);
+            userRooms[socket.id] = coding;
               socket.emit('khalikaro');
               io.to(coding).emit('brdcastg',x);
             }}
@@ -168,6 +182,7 @@ socket.on('addlist',(data)=>{
               socket.leave(room);
               io.to(room).emit('chhodgya',x);
               socket.join(it);
+            userRooms[socket.id] = it;
               socket.emit('khalikaro');
         io.to(it).emit('brdcastg',x);
             }}
@@ -183,6 +198,7 @@ socket.on('addlist',(data)=>{
               socket.leave(room);
               io.to(room).emit('chhodgya',x);
               socket.join(chess);
+              userRooms[socket.id] = chess;
               socket.emit('khalikaro');
               io.to(chess).emit('brdcastg',x);
             }}
@@ -191,9 +207,13 @@ socket.on('addlist',(data)=>{
     });
     socket.on('firstroom',x=>{
       const genral = 'room-genral';
+        if (x == null){
+            socket.emit('alertforname',x);}
+        else{
       socket.join(genral);
+     userRooms[socket.id] = genral;
       io.to(genral).emit('brdcastg',x);
-    })
+        }});
 
 });
 
