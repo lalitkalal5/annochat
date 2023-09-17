@@ -239,8 +239,14 @@ chatMessages.scrollTop = chatMessages.scrollHeight;
     li.classList.add('left');
     chatMessages.appendChild(li);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-
   });
+    socket.on('alertforname',x=>{
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = ` reload the page and enter your name again  `;
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
+  })
   socket.on('khalikaro',()=>{
     const chatMessages = document.getElementById('chatBox');
     chatMessages.innerHTML='';
