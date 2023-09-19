@@ -20,7 +20,7 @@ app.get('/grp',(req,res)=>{
     res.sendFile(__dirname+'/public/group.html')
 });
 app.get('/contact',(req,res)=>{
-    res.sendFile(__dirname+'/public/contacts.html')
+    res.sendFile(__dirname+'/contacts.html')
 });
 const waitingUsers = [];
 let roomCounter = 1;
