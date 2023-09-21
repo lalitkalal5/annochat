@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Video Chat</title>
+<!-- <link rel="stylesheet" href="style.css"> -->
+<script src="/socket.io/socket.io.js"></script>
+<!-- <script src="/socket.io/socket.io.js"></script> -->
+</head>
+        <style>
+            body {
+  font-family: sans-serif;
+}
+
+#videos {
+  width: 100%;
+  height: 50%;
+}
+
+#user-1-video {
+  float: left;
+  width: 45%;
+  border: solid black;
+}
+
+#user-2-video {
+  float: right;
+  width: 45%;
+  border: solid green;
+}
+
+#chat-box {
+  width: 100%;
+  height: 50%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+#chat-messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#message-input {
+  width: 100%;
+  height: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+#send-button {
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+#startnewchat{
+  background-color: #5433cb61;
+    color: #010805b5;
+    justify-content: center;
+    position: inherit;
+    display: flex;
+    font-family: cursive;
+    margin-left: 0px;
+}header{
+  background-color: rgb(67, 55, 55);
+  /* align-content: center; */
+  content: flex;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.chatBox {
+      flex-grow: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+</style>
+<body>
+  <header>
+    Annochat
+  </header>
+<div id="videos">
+  <video class="video-player" id="user-1-video" autoplay playsinline muted></video>
+  <video class="video-player" id="user-2-video"  autoplay playsinline></video>
+</div>
+  <div class="chatBox" id="chatBox">
+    <div id="totaljanta"></div>
+    <!-- <div class="message"> -->
+      <div class="message right"> right</div></div>
+      <div class="message middle">bichvala</div>
+      <div class="message left">leftvala </div>
+  </div>    
+  <input type="text" id="message-input" placeholder="Type your message here...">
+  <button id="send-button">Send</button>
+</div>
+<div class="startchat">
+  <button onclick ="addlistvc()" id="startnewchat">startnewchat</button>
+  <!-- <button onclick="createOffer()" id="createOffer">createOffer</button> -->
+</div>
+</body><script>
+    var socket = io();
+    let peerConnection;
+    let localStream;
+    let remoteStream;
+
+    let init = async() =>{
+        localStream = await navigator.mediaDevices.getUserMedia({video :true,audio:true })
+
+        document.getElementById("user-1-video").srcObject = localStream
+ 
+          // Create an RTCPeerConnection object
+          peerConnection = new RTCPeerConnection();
+
+        // Add the local stream to the peer connection
+        localStream.getTracks().forEach((track) => {
+          peerConnection.addTrack(track, localStream);
+        });
+
+        peerConnection.ontrack = (event) => {
+          console.log('last step');
+        if (!remoteStream) {
+        remoteStream = new MediaStream();
+        document.getElementById("user-2-video").srcObject = remoteStream;
+        }
+        remoteStream.addTrack(event.track, remoteStream);
+    };
+
+        peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+            socket.emit('ice-candidate', event.candidate);
+        }
+       };
+       createOffer();
+    }
+    init()
+        //  peerConnection.onicecandidate = (event) => {
+        // if (event.candidate) {
+        //     socket.emit('ice-candidate', event.candidate);
+        // }
+        // };
+    socket.on('rcvoffer', async (offer)=>{
+        console.log(offer);
+     
+        try {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection.createAnswer(offer);
+        await peerConnection.setLocalDescription(answer);
+
+        socket.emit('answer', answer);
+    } catch (error) {
+        console.error('Error handling offer:', error);
+    }})
+
+    
+socket.on('rcvanswer', async (answer) => {
+    console.log(answer);
+    try {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        console.log('complete');
+    } catch (error) {
+        console.error('Error handling answer:', error);
+    }
+});
+   
+    async function createOffer(){
+      try {
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    // new RTCSessionDescription(offer);
+
+    // Send the offer to the other user via your signaling server (Socket.IO)
+    socket.emit('offer', offer);
+  } catch (error) {
+    console.error('Error creating offer:', error);
+  }
+    };
+   
+    function addlistvc(){
+      socket.emit('addlistvc',socket.id);
+      createOffer();
+      // ClearChatBox();
+      // isactivechat = true;
+      // updateactionbtn('ENDCHAT');
+    }
+
+</script>
+</html>
