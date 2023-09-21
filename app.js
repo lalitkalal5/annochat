@@ -22,12 +22,16 @@ app.get('/grp',(req,res)=>{
 app.get('/contact',(req,res)=>{
     res.sendFile(__dirname+'/contacts.html')
 });
+app.get('/vc',(req,res)=>{
+    res.sendFile(__dirname+'/vc2.html')
+});
 const waitingUsers = [];
 let roomCounter = 1;
 totaljanta =[];
 const users = {};
 const userRooms = {};
-
+const waitingUsersvc = [];
+let roomCountervc = 1000;
 
 
 io.on('connection', (socket) => {
@@ -83,7 +87,58 @@ socket.on('addlist',(data)=>{
         console.log(waitingUsers);
         }
 });
-    socket.on('endchat',()=>{
+socket.on('addlistvc',(data)=>{
+    console.log(data);
+    if (waitingUsersvc.length > 0 ) {
+        const partnerSocketId = waitingUsersvc.pop();
+        const roomName = `room-${roomCountervc}`;
+
+        socket.join(roomName);
+        const partnerSocket = io.sockets.sockets.get(partnerSocketId);
+        partnerSocket.join(roomName);
+        socket.room = roomName;
+        partnerSocket.room = roomName;
+        console.log('user joined in vc a room',socket.id,partnerSocket.id);
+        console.log(waitingUsersvc);
+        io.to(socket.room).emit('partnerjoined', roomName);
+
+        roomCounter++;}
+    else{
+        waitingUsersvc.push(socket.id);
+        console.log('user joined in waiting vc list',socket.id);
+        console.log(waitingUsersvc);
+        }
+});
+socket.on('ice-candidate',(candidate)=>{
+    socket.to(socket.room).emit('new-ice-candidate',candidate)
+});
+socket.on('new-ice-candidate', async (candidate) => {
+    console.log(candidate);
+    try {
+      await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    } catch (error) {
+      console.error('Error adding ICE candidate:', error);
+    }
+  });  
+  socket.on('offer', (offer)=>{
+    // console.log(data)
+    socket.to(socket.room).emit('rcvoffer',offer)});
+       
+socket.on('answer',(answer)=>{
+    console.log(answer);
+    socket.to(socket.room).emit('rcvanswer',answer);
+});
+socket.on('disconnectfromvc',(data)=>{
+// peerConnection.close();
+// socket.on('addlistvc',(data));
+socket.to(socket.room).emit('left');
+socket.leave(socket.room);
+console.log("room choota")
+})
+socket.on('leave',()=>{
+    socket.leave(socket.room);
+});   
+socket.on('endchat',()=>{
      socket.disconnect();
 });
     socket.on('sendMessage', ( msg ) => {
@@ -111,8 +166,11 @@ socket.on('addlist',(data)=>{
         console.log(waitingUsers);
         const index = waitingUsers.indexOf(socket.id);
         if (index !== -1) {
-            waitingUsers.splice(index, 1);
-        }
+            waitingUsers.splice(index, 1);};
+          const index2 = waitingUsersvc.indexOf(socket.id);
+        if (index2 !== -1) {
+            waitingUsersvc.splice(index2, 1);
+        };
     });
     // socket.on('moklo',({x,msg})=>{
     //     console.log('mila hua msg',msg,x);
