@@ -175,7 +175,13 @@ socket.on('rcvanswer', async (answer) => {
         console.error('Error handling answer:', error);
     }
 });
+  socket.on('left',()=>{
+  peerConnection.close();
+  console.log('connection chhuta');
+  socket.emit('leave',socket.id);
+});
    
+   }
     async function createOffer(){
       try {
     const offer = await peerConnection.createOffer();
