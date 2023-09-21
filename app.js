@@ -23,7 +23,7 @@ app.get('/contact',(req,res)=>{
     res.sendFile(__dirname+'/contacts.html')
 });
 app.get('/vc',(req,res)=>{
-    res.sendFile(__dirname+'/vc2.html')
+    res.sendFile(__dirname+'/public/vc2.html')
 });
 const waitingUsers = [];
 let roomCounter = 1;
