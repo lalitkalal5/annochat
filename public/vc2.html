@@ -180,8 +180,6 @@ socket.on('rcvanswer', async (answer) => {
   console.log('connection chhuta');
   socket.emit('leave',socket.id);
 });
-   
-   }
     async function createOffer(){
       try {
     const offer = await peerConnection.createOffer();
