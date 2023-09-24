@@ -4,6 +4,7 @@
 <title>Annochat</title>
 <!-- <link rel="stylesheet" href="style.css"> -->
 <script src="/socket.io/socket.io.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- <script src="/socket.io/socket.io.js"></script> -->
  <link rel = "icon" href = "https://annochat.com/annochat3.png" 
             type = "image/x-icon">
@@ -12,34 +13,42 @@
  body {
   font-family: sans-serif;
   background-image: linear-gradient(rgb(3, 20, 35),rgb(141, 81, 186));
-  min-height: 99vh;
+  height: 99vh;
+  overflow:hidden;
 }
 header {
     background-color: #1b1919;
     color: white;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
     font-family:'Courier New', Courier, monospace;
     font-size: 2em;
     font-weight: bold;
 }
 #videos {
-  width: 100%;
-  height: 60%;
+  width: 75%;
+  height: 75%%;
+ display:flex;
+ flex-direction:column;
 }
 
 #user-1-video {
-  float: left;
-  width: 49%;
+  width: 75%;
   border: solid black;
-}
+ margin-top:5px;
+  }
 
 #user-2-video {
-  float: right;
-  width: 49%;
+  width: 75%;
   border: solid black;
 }
-
+#status{
+    background-color: #fff;
+    margin: 3px;
+    text-align: center;
+    font-weight: bold;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
 
 /* #chat-messages {
   list-style: none;
@@ -90,6 +99,7 @@ header {
   <header>
     Annochat
   </header>
+ <div class="status" id="status"></div>
 <div id="videos">
   <video class="video-player" id="user-1-video" autoplay playsinline muted></video>
   <video class="video-player" id="user-2-video"  autoplay playsinline></video>
@@ -114,6 +124,7 @@ header {
     let localStream;
     let remoteStream;
     let isactivechat = false;
+    newjoined();
 
     let init = async() =>{
         localStream = await navigator.mediaDevices.getUserMedia({video :true,audio:true })
@@ -177,7 +188,11 @@ socket.on('rcvanswer', async (answer) => {
 });
   socket.on('left',()=>{
   peerConnection.close();
-  console.log('connection chhuta');
+  const chatMessages = document.getElementById('status');
+  chatMessages.innerHTML='';
+    const li = document.createElement('li');
+    li.textContent = `stranger disconnected `;
+    chatMessages.appendChild(li);
   socket.emit('leave',socket.id);
 });
     async function createOffer(){
@@ -219,8 +234,20 @@ socket.on('rcvanswer', async (answer) => {
     function updateactionbtn(text){
     const actionbutton =document.getElementById('startnewchat');
     actionbutton.textContent =text;
-
   }
+  function newjoined(){
+  const chatMessages = document.getElementById('status');
+    const li = document.createElement('li');
+    li.textContent = `press startnewchat to start videocall`;
+    chatMessages.appendChild(li);
+ } 
+ socket.on('partnerjoined',()=>{
+  const chatMessages = document.getElementById('status');
+  chatMessages.innerHTML='';
+    const li = document.createElement('li');
+    li.textContent = `you are connected to stranger `;
+    chatMessages.appendChild(li);
+ });
 
 </script>
 </html>
