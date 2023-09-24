@@ -211,7 +211,7 @@ socket.on('rcvanswer', async (answer) => {
    
     function addlistvc(){
       socket.emit('addlistvc',socket.id);
-      createOffer();
+      // createOffer();
       // ClearChatBox();
       // isactivechat = true;
       // updateactionbtn('ENDCHAT');
@@ -249,6 +249,8 @@ socket.on('rcvanswer', async (answer) => {
     li.textContent = `you are connected to stranger `;
     chatMessages.appendChild(li);
  });
-
+ socket.on('abc123',()=>{
+  createoffer();
+});
 </script>
 </html>
