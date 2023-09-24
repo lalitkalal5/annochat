@@ -100,7 +100,7 @@ socket.on('addlistvc',(data)=>{
         partnerSocket.room = roomName;
         console.log('user joined in vc a room',socket.id,partnerSocket.id);
         console.log(waitingUsersvc);
-        io.to(socket.room).emit('abc123',roomName);
+        socket.to(socket.room).emit('abc123',roomName);
         io.to(socket.room).emit('partnerjoined', roomName);
 
         roomCounter++;}
