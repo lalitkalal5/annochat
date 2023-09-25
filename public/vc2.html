@@ -154,7 +154,7 @@ header {
             socket.emit('ice-candidate', event.candidate);
         }
        };
-              createOffer();
+              // createOffer();
 
 
     }
@@ -164,6 +164,15 @@ header {
         //     socket.emit('ice-candidate', event.candidate);
         // }
         // };
+   socket.on('new-ice-candidate', async (candidate) => {
+    console.log(candidate);
+    try {
+      await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+     console.log('candidate exchange ho gaye');
+    } catch (error) {
+      console.error('Error adding ICE candidate:', error);
+    }
+  });  
     socket.on('rcvoffer', async (offer)=>{
         console.log(offer);
      
