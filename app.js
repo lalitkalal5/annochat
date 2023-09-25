@@ -113,14 +113,7 @@ socket.on('addlistvc',(data)=>{
 socket.on('ice-candidate',(candidate)=>{
     socket.to(socket.room).emit('new-ice-candidate',candidate)
 });
-socket.on('new-ice-candidate', async (candidate) => {
-    console.log(candidate);
-    try {
-      await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    } catch (error) {
-      console.error('Error adding ICE candidate:', error);
-    }
-  });  
+
   socket.on('offer', (offer)=>{
     // console.log(data)
     socket.to(socket.room).emit('rcvoffer',offer)});
