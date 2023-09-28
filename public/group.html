@@ -29,7 +29,7 @@
     header {
       background-color: #1b1919;
       color: white;
-      padding: 15px;
+      padding: 20px;
       text-align: center;
       font-family: 'Courier New', Courier, monospace;
     font-size: 2em;
@@ -40,7 +40,7 @@
     .chatBox {
       flex-grow: 1;
       overflow-y: scroll;
-      max-height: 70vh;
+      max-height: 68vh;
       overflow-x: hidden;
       padding: 20px;
     }
@@ -80,15 +80,16 @@
     
     .bhejo{
       display: flex;
-      padding: 10px;
+      padding: 15px;
       /* float: right; */
-      background-color: #f2f2f23d;
+      background-color: #1b1919;
     }
     
     .bhejo input{
       flex-grow: 1; 
-      padding: 5px;
-      border: none;
+      padding: 8px;
+      font-size:large;
+      border: solid;
       border-radius: 5px; 
     }
     
@@ -191,7 +192,12 @@ elemnt.scrollIntoView();
     socket.emit('sendusername',x);
     // socket.emit('genral',x);
     socket.emit('firstroom',x);
-    // setActiveButton(genralButton);
+    const ceButton = document.querySelector('.ceButton');
+const itButton = document.querySelector('.itButton');
+const genralButton = document.querySelector('.genralButton');
+const chessButton = document.querySelector('.chessButton');
+const codingButton = document.querySelector('.codingButton');
+    setActiveButton(genralButton);
     socket.on('brdcastg',data=>{
     const chatMessages = document.getElementById('chatBox');
     const li = document.createElement('li');
@@ -206,7 +212,7 @@ elemnt.scrollIntoView();
     li.classList.add('middle');
     chatMessages.appendChild(li);
     })
-    socket.on('chhodgya',data=>{
+    socket.on('chhodgya',(data)=>{
     console.log(data);
     const chatMessages = document.getElementById('chatBox');
     const li = document.createElement('li');
@@ -281,11 +287,7 @@ chatMessages.scrollTop = chatMessages.scrollHeight;
     // chatMessages.innerHTML='';
     setActiveButton(genralButton);
   };
-const ceButton = document.querySelector('.ceButton');
-const itButton = document.querySelector('.itButton');
-const genralButton = document.querySelector('.genralButton');
-const chessButton = document.querySelector('.chessButton');
-const codingButton = document.querySelector('.codingButton');
+
   // highlighting the button 
   function setActiveButton(activeButton) {
   // Reset all buttons to remove active class
