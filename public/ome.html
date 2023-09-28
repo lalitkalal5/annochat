@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel = "icon" href = "https://annochat.com/annochat3.png" 
+            type = "image/x-icon">
   <title>Annochat</title>
   <!-- <script src="http://127.0.0.1:3000//socket.io/socket.io.js"></script> -->
   <!-- <a href="http://127.0.0.1:3000/otv" class="option">One-to-One Chat</a> -->
@@ -45,7 +47,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       padding: 15px;
-      max-height:68vh
+      max-height:71vh
     }
     
     /* .message {
@@ -122,6 +124,9 @@
       font-size: 1em;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
+    #typingstatus{
+      background-color: rgb(196 122 251);
+    }
   </style>
 </head>
 <body>
@@ -129,6 +134,7 @@
     Annochat
     <img id="logo" src="/annochat3.png">
   </header>
+    <audio id="connectSound" src="/connect.mp3" type="audio/mpeg" ></audio>
   <div class="chatBox" id="chatBox">
     <div id="totaljanta"></div>
     <!-- <div class="message"> -->
@@ -136,6 +142,7 @@
       <div class="message middle"><div>
       <div class="message left"></div>
   </div>    
+        <div id="typingstatus"></div>
   <form id="chatform" >
   <div class="bhejo">
     <input type="text" id="input" placeholder="Type your message...">
@@ -147,6 +154,7 @@
 </body><script>
   var socket = io();
   var isactivechat = false;
+  var isTyping = false;
   const offensiveWords = ["loda","bhenchod","madarchod","land","chutiya","chutiye","chut","bhosdina","lode"]
   // var x = prompt("enter your nickname");
   // socket.emit('sendusername',x);
@@ -165,6 +173,46 @@ if( isactivechat){
     addlist();
   };
 };
+              // typing indicator
+const typingIndicator = document.createElement('li');
+typingIndicator.textContent = 'Stranger is typing...';
+typingIndicator.classList.add('typing-indicator');
+let typingTimeout; 
+
+
+document.getElementById('input').addEventListener('keydown', function (event) {
+  if (event.key !== 'Enter') {
+    // Ignore the Enter key press
+    isTyping = true;
+    socket.emit('typing', true); // Notify the server that the user is typing
+  }
+});
+document.getElementById('input').addEventListener('keyup', function (event) {
+  if (event.key === 'Enter' && isTyping) {
+    // Handle sending the message when the Enter key is pressed
+    isTyping = false;
+    sendMessage(); // Call your existing sendMessage function
+    socket.emit('typing', false); // Notify the server that the user stopped typing
+  }
+});
+  // showing typing or not
+socket.on('typing', (isTyping) => {
+  const chatMessages = document.getElementById('typingstatus');
+  if (isTyping) {
+    // Add the typing indicator to the chat if it's not already there
+    if (!typingIndicator.parentElement) {
+      chatMessages.appendChild(typingIndicator);
+    }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  } else {
+    // Remove the typing indicator if it's present
+    if (typingIndicator.parentElement) {
+      chatMessages.removeChild(typingIndicator);
+    }
+  }
+});
+
+  
   function addlist(){
     socket.emit('addlist',socket.id);
     ClearChatBox();
@@ -194,6 +242,8 @@ function filterOffensiveWords(message) {
     return message;
 }
   function sendMessage(){
+     socket.emit('typing',false);
+     isTyping = false;
       const messageINput = document.getElementById('input')
       let msg = messageINput.value.trim();
       // const userName = x;
@@ -214,6 +264,8 @@ function filterOffensiveWords(message) {
       }
   }
   socket.on('partnerjoined',()=>{
+     var connectSound = document.getElementById('connectSound');
+    connectSound.play();
     const chatMessages = document.getElementById('chatBox');
     const li = document.createElement('li');
     li.textContent = `you are connected to Stranger`;
