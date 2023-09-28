@@ -29,6 +29,7 @@ const waitingUsers = [];
 let roomCounter = 1;
 totaljanta =[];
 const users = {};
+const usergrp ={};
 const userRooms = {};
 const waitingUsersvc = [];
 let roomCountervc = 1000;
@@ -149,8 +150,9 @@ socket.on('endchat',()=>{
         // console.log(disconnectedRoom);
         if (disconnectedRoom){
         const disconnectedUsername = users[socket.id];
+            const usergya = usergrp[socket.id];
         // console.log(disconnectedUsername);
-        socket.to(disconnectedRoom).emit('chhodgya',disconnectedUsername);
+        socket.to(disconnectedRoom).emit('chhodgya',usergya);
             delete userRooms[socket.id];
         }
         totaljanta.pop(socket.id);
@@ -223,7 +225,7 @@ socket.on('endchat',()=>{
               socket.join(coding);
             userRooms[socket.id] = coding;
               socket.emit('khalikaro');
-              io.to(coding).emit('brdcastg',x);
+              io.to(coding).emit('brdcastcoding',x);
             }}
           }
        
@@ -239,7 +241,7 @@ socket.on('endchat',()=>{
               socket.join(it);
             userRooms[socket.id] = it;
               socket.emit('khalikaro');
-        io.to(it).emit('brdcastg',x);
+        io.to(it).emit('brdcastit',x);
             }}
           }
         
@@ -255,7 +257,7 @@ socket.on('endchat',()=>{
               socket.join(chess);
               userRooms[socket.id] = chess;
               socket.emit('khalikaro');
-              io.to(chess).emit('brdcastg',x);
+              io.to(chess).emit('brdcastchess',x);
             }}
           }
        
@@ -266,6 +268,7 @@ socket.on('endchat',()=>{
             socket.emit('alertforname',x);}
         else{
       socket.join(genral);
+    usergrp[socket.id]= x;
      userRooms[socket.id] = genral;
       io.to(genral).emit('brdcastg',x);
         }});
