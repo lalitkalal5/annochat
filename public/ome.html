@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, width=device-width, maximum-scale=1.0, minimal-ui">
-<title>Annochat</title>
+  <title>Annochat</title>
   <!-- <script src="http://127.0.0.1:3000//socket.io/socket.io.js"></script> -->
   <!-- <a href="http://127.0.0.1:3000/otv" class="option">One-to-One Chat</a> -->
   <!-- <script src="http://localhost:3000/socket.io/socket.io.js"></script> -->
@@ -17,19 +16,19 @@
       display: flex;
       background-image: linear-gradient(rgb(3, 20, 35),rgb(141, 81, 186));
       flex-direction: column;
-      height: 95vh;
-      overflow: hidden;
+      height: 100vh;
+      /* overflow:hidden; */
     } 
     #logo{
-          height: auto;
-    width: 30px;
-    margin-left: -15px;
-    margin-bottom: -7px;          
-}
+        height: auto;
+        width: 30px;
+        margin-left: -15px;
+        margin-bottom: -7px;
+    }
     header {
       background-color: #1b1919;
       color: white;
-      padding: 17px;
+      padding: 20px;
       text-align: center;
       font-family: 'Courier New', Courier, monospace;
     font-size: 2em;
@@ -45,8 +44,8 @@
       flex-grow: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 20px;
-      max-height:68vh;
+      padding: 15px;
+      max-height:68vh
     }
     
     /* .message {
@@ -93,7 +92,8 @@
       flex-grow: 1; 
       padding: 8px;
       border: solid;
-      border-radius: 4px; 
+      border-radius: 5px; 
+      font-size: 1.1em;
     }
     
     .bhejo button{
@@ -119,7 +119,7 @@
     {
       background-color: #fff;
       font-style: normal;
-      font-size:1em;
+      font-size: 1em;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
   </style>
@@ -135,16 +135,15 @@
       <div class="message right"></div></div>
       <div class="message middle"><div>
       <div class="message left"></div>
-  </div>   
-  <div class="bhejo"> 
-   <form id="chatform" >
+  </div>    
+  <form id="chatform" >
+  <div class="bhejo">
     <input type="text" id="input" placeholder="Type your message...">
     <button type="submit" id="send" onclick="sendMessage()">Send</button>
   </form></div>
-   <div class="start-new-chat">
+  <div class="start-new-chat">
     <button id="actionbutton" onclick="performAction()">START-NEW-CHAT</button>
   </div>
- 
 </body><script>
   var socket = io();
   var isactivechat = false;
