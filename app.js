@@ -88,6 +88,10 @@ socket.on('addlist',(data)=>{
         console.log(waitingUsers);
         }
 });
+     socket.on('typing', (isTyping) => {
+        // Broadcast the 'typing' event to all other connected clients except the sender
+        socket.to(socket.room).emit('typing', isTyping);
+      });
 socket.on('addlistvc',(data)=>{
     console.log(data);
     if (waitingUsersvc.length > 0 ) {
