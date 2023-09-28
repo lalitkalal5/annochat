@@ -207,6 +207,7 @@ elemnt.scrollIntoView();
     chatMessages.appendChild(li);
     })
     socket.on('chhodgya',data=>{
+    console.log(data);
     const chatMessages = document.getElementById('chatBox');
     const li = document.createElement('li');
     li.textContent = `${data} left chat   `;
