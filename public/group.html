@@ -193,6 +193,7 @@ elemnt.scrollIntoView();
     socket.emit('sendusername',x);
     // socket.emit('genral',x);
     socket.emit('firstroom',x);
+    const offensiveWords = ["loda","bhenchod","madarchod","land","chutiya","chutiye","chut","bhosdina","lode","bc","mc"];
     const ceButton = document.querySelector('.ceButton');
 const itButton = document.querySelector('.itButton');
 const genralButton = document.querySelector('.genralButton');
@@ -212,7 +213,28 @@ const codingButton = document.querySelector('.codingButton');
     li.textContent = `${data} joined chat in ce  `;
     li.classList.add('middle');
     chatMessages.appendChild(li);
-    })
+    });
+     socket.on('brdcastchess',data=>{
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = `${data} joined chat in Chess-Room`;
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
+    });
+     socket.on('brdcastcoding',data=>{
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = `${data} joined chat in Coding-Room`;
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
+    });
+     socket.on('brdcastit',data=>{
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = `${data} joined chat in It-Room`;
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
+    });
     socket.on('chhodgya',(data)=>{
     console.log(data);
     const chatMessages = document.getElementById('chatBox');
@@ -220,13 +242,21 @@ const codingButton = document.querySelector('.codingButton');
     li.textContent = `${data} left chat   `;
     li.classList.add('middle');
     chatMessages.appendChild(li);
-    })
+    });
+    function filterOffensiveWords(message) {
+    for (const word of offensiveWords) {
+        const regex = new RegExp(`\\b${word}\\b`, 'gi'); // Use word boundaries and case-insensitive flag
+        message = message.replace(regex, '* '.repeat(word.length));
+    }
+    return message;
+};
 
     function moklo(){
     const msginput = document.getElementById('input');
-    const msg = msginput.value.trim();
+    let msg = msginput.value.trim();
 
     if (msg !== ''){
+      msg = filterOffensiveWords(msg);
       socket.emit('moklo',({x,msg}));
       msginput.value = '';
 
