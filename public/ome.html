@@ -135,6 +135,7 @@
     <img id="logo" src="/annochat3.png">
   </header>
     <audio id="connectSound" src="/connect.mp3" type="audio/mpeg" ></audio>
+      <audio id="disconnectSound" src="/disconnect.mp3" type="audio/mpeg" ></audio>
   <div class="chatBox" id="chatBox">
     <div id="totaljanta"></div>
     <!-- <div class="message"> -->
@@ -284,6 +285,8 @@ function filterOffensiveWords(message) {
     chatMessages.innerHTML='';
   })
   socket.on('userleft',()=>{
+    var disconnectSound = document.getElementById('disconnectSound');
+    disconnectSound.play();
     const chatMessages = document.getElementById('chatBox');
     const li = document.createElement('li');
     li.textContent = `Stranger left the chat`;
