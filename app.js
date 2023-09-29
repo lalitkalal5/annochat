@@ -28,8 +28,8 @@ app.get('/vc',(req,res)=>{
 const waitingUsers = [];
 let roomCounter = 1;
 totaljanta =[];
+usersingrp=[];
 const users = {};
-const usergrp ={};
 const userRooms = {};
 const waitingUsersvc = [];
 let roomCountervc = 1000;
@@ -92,6 +92,10 @@ socket.on('addlist',(data)=>{
         // Broadcast the 'typing' event to all other connected clients except the sender
         socket.to(socket.room).emit('typing', isTyping);
       });
+    socket.on('sendusername',data=>{
+         usersingrp.push(data);
+        socket.emit('jantaingrp',usersingrp.length);
+    }
 socket.on('addlistvc',(data)=>{
     console.log(data);
     if (waitingUsersvc.length > 0 ) {
@@ -160,6 +164,7 @@ socket.on('endchat',()=>{
             delete userRooms[socket.id];
         }
         totaljanta.pop(socket.id);
+        usersingrp.pop(socket.id);
         // const partnerSocket = io.sockets.sockets.get(partnerSocketId);
         // partnerSocket.leave(socket.room);
         // partnerSocket.push(waitingUsers);
