@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel = "icon" href = "https://annochat.com/annochat3.png" 
+            type = "image/x-icon">
   <title>Annochat</title>
   <!-- <script src="http://127.0.0.1:3000//socket.io/socket.io.js"></script> -->
   <script src="/socket.io/socket.io.js"></script>
@@ -126,7 +128,11 @@
   background-color: #5b536f;
   padding: 10px 0;
 }
-
+   #totaljanta{
+         font-size: 0.4em;
+    float: right;
+    color: #396da6;
+    }
 .roomButton{
   background-color: #02080e;
   color: white;
@@ -158,13 +164,14 @@
   <header>
     Annochat
     <img id="logo" src="/annochat3.png">
+    <div id="totaljanta"></div>
   </header>
   <div class="room">
-    <button  class="roomButton ceButton" onclick="ce()">ce</button>
-    <button  class="roomButton itButton" onclick="it()">it</button>
-    <button  class="roomButton genralButton" onclick="genral()" >genral</button>
-    <button  class="roomButton chessButton" onclick="chess()" >chess</button>
-    <button  class="roomButton codingButton" onclick="coding()" >coding</button>
+<!--     <button  class="roomButton ceButton" onclick="ce()">ce</button>
+    <button  class="roomButton itButton" onclick="it()">it</button> -->
+    <button  class="roomButton genralButton" onclick="genral()" >GENRALવાતો </button>
+<!--     <button  class="roomButton chessButton" onclick="chess()" >chess</button>
+    <button  class="roomButton codingButton" onclick="coding()" >coding</button> -->
 
   </div>
 <div class="main">
@@ -330,5 +337,10 @@ chatMessages.scrollTop = chatMessages.scrollHeight;
   
   activeButton.classList.add('active');
 }
+    socket.on('jantaingrp',(data)=>{
+    let janta = document.getElementById('totaljanta');
+    janta.innerHTML= `&#128064;:${data}`;
+    console.log('data');
+   })
   </script>
   </html>
