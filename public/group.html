@@ -164,7 +164,7 @@
   <header>
     Annochat
     <img id="logo" src="/annochat3.png">
-    <div id="totaljanta"></div>
+<!--     <div id="totaljanta"></div> -->
   </header>
   <div class="room">
 <!--     <button  class="roomButton ceButton" onclick="ce()">ce</button>
@@ -200,7 +200,7 @@ elemnt.scrollIntoView();
     socket.emit('sendusername',x);
     // socket.emit('genral',x);
     socket.emit('firstroom',x);
-    const offensiveWords = ["loda","bhenchod","madarchod","land","chutiya","chutiye","chut","bhosdina","lode","bc","mc"];
+    const offensiveWords = ["loda","bhenchod","madarchod","land","chutiya","chutiye","chut","bhosdina","lode","bc","mc","lodu"];
     const ceButton = document.querySelector('.ceButton');
 const itButton = document.querySelector('.itButton');
 const genralButton = document.querySelector('.genralButton');
@@ -329,11 +329,11 @@ chatMessages.scrollTop = chatMessages.scrollHeight;
   // highlighting the button 
   function setActiveButton(activeButton) {
   // Reset all buttons to remove active class
-  ceButton.classList.remove('active');
-  itButton.classList.remove('active');
-  genralButton.classList.remove('active');
-  chessButton.classList.remove('active');
-  codingButton.classList.remove('active');
+  // ceButton.classList.remove('active');
+  // itButton.classList.remove('active');
+  // genralButton.classList.remove('active');
+  // chessButton.classList.remove('active');
+  // codingButton.classList.remove('active');
   
   activeButton.classList.add('active');
 }
