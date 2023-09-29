@@ -95,7 +95,7 @@ socket.on('addlist',(data)=>{
     socket.on('sendusername',data=>{
          usersingrp.push(data);
         socket.emit('jantaingrp',usersingrp.length);
-    }
+    });
 socket.on('addlistvc',(data)=>{
     console.log(data);
     if (waitingUsersvc.length > 0 ) {
