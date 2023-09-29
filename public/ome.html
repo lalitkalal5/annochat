@@ -38,9 +38,9 @@
       
     }
     #totaljanta{
-      position: relative;
-      top: -20px;
-      float: right;
+         font-size: 0.4em;
+    float: right;
+    color: #396da6;
     }
     .chatBox {
       flex-grow: 1;
@@ -304,7 +304,7 @@ chatMessages.scrollTop = chatMessages.scrollHeight;
 });
    socket.on('totaljanta',(data)=>{
     const janta = document.getElementById('totaljanta');
-    janta.innerHTML= `people:${data}`;
+    janta.innerHTML= `&#128064;:${data}`;
    })
 </script>
 </html>
