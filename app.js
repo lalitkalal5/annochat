@@ -33,6 +33,7 @@ const users = {};
 const userRooms = {};
 const waitingUsersvc = [];
 let roomCountervc = 1000;
+const usergrp ={};
 
 
 io.on('connection', (socket) => {
@@ -92,10 +93,10 @@ socket.on('addlist',(data)=>{
         // Broadcast the 'typing' event to all other connected clients except the sender
         socket.to(socket.room).emit('typing', isTyping);
       });
-    // socket.on('sendusername',data=>{
-    //      usersingrp.push(data);
-    //     socket.emit('jantaingrp',usersingrp.length);
-    // });
+    socket.on('sendusername',data=>{
+         usersingrp.push(data);
+        socket.emit('jantaingrp',usersingrp.length);
+    });
 socket.on('addlistvc',(data)=>{
     console.log(data);
     if (waitingUsersvc.length > 0 ) {
@@ -288,3 +289,5 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log("server listening on 3000");
 });
+
+
