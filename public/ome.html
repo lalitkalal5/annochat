@@ -140,7 +140,7 @@
   <div class="chatBox" id="chatBox">
     <!-- <div class="message"> -->
       <div class="message right"></div></div>
-      <div class="message middle"><div>
+      <div id ="middlemsg" class="message middle"><div>
       <div class="message left"></div>
   </div>    
         <div id="typingstatus"></div>
@@ -150,7 +150,7 @@
     <button type="submit" id="send" onclick="sendMessage()">Send</button>
   </form></div>
   <div class="start-new-chat">
-    <button id="actionbutton" onclick="performAction()">START-NEW-CHAT</button>
+    <button id="actionbutton" >START-NEW-CHAT</button>
   </div>
 </body><script>
   var socket = io();
@@ -217,8 +217,8 @@ socket.on('typing', (isTyping) => {
   function addlist(){
     socket.emit('addlist',socket.id);
     ClearChatBox();
-    isactivechat = true;
     updateactionbtn('ENDCHAT');
+  
   }
   function updateactionbtn(text){
     const actionbutton =document.getElementById('actionbutton');
@@ -231,7 +231,10 @@ const chatMessages = document.getElementById('chatBox');
 };
 function endchat(){
   // socket.emit('endchat',socket.id)
-  location.reload();
+  socket.emit('xxx',socket.id);
+  isactivechat=false;
+  updateactionbtn('START-NEW-CHAT');
+  // location.reload();
   // isactivechat= false;
   // updateactionbtn();
 }
@@ -249,7 +252,7 @@ function filterOffensiveWords(message) {
       let msg = messageINput.value.trim();
       // const userName = x;
 
-      if (msg !== ''){
+      if (msg !== '' && isactivechat){
         msg = filterOffensiveWords(msg)
 
         socket.emit('sendMessage',msg );
@@ -272,6 +275,8 @@ function filterOffensiveWords(message) {
     li.textContent = `you are connected to Stranger`;
     li.classList.add('middle');
     chatMessages.appendChild(li);
+    isactivechat = true;
+    updateactionbtn('ENDCHAT');
   });
   socket.on('waitmf',()=>{
     const chatMessages = document.getElementById('chatBox');
@@ -289,9 +294,13 @@ function filterOffensiveWords(message) {
     disconnectSound.play();
     const chatMessages = document.getElementById('chatBox');
     const li = document.createElement('li');
-    li.textContent = `Stranger left the chat`;
+    li.textContent = `chat ended`;
     li.classList.add('middle');
     chatMessages.appendChild(li);
+    isactivechat=false;
+    updateactionbtn('START-NEW-CHAT');
+    const ts = document.getElementById('typingstatus');
+    ts.innerHTML='';
   })
 socket.on('recieveMessage', (data) => {
 console.log(`recieved msg is ${data.msg}`);
@@ -305,6 +314,47 @@ chatMessages.scrollTop = chatMessages.scrollHeight;
    socket.on('totaljanta',(data)=>{
     const janta = document.getElementById('totaljanta');
     janta.innerHTML= `&#128064;:${data}`;
-   })
+   });
+   window.addEventListener('beforeunload', function (e) {
+    // Display a confirmation dialog
+    if(isactivechat){
+    const confirmationMessage = 'Are you sure you want to leave the chat?';
+    e.preventDefault();
+    e.returnValue = confirmationMessage; // Use the variable, not a string
+    // You can customize the confirmation message
+    // const confirmationMessage = 'Are you sure you want to leave the chat?';
+
+    // Show the confirmation dialog to the user
+    if (confirmationMessage ) {
+        e.returnValue = confirmationMessage;
+    }}
+});
+
+// Add this event listener to your "End Chat" button
+document.getElementById('actionbutton').addEventListener('click', function () {
+    if (this.textContent === 'ENDCHAT' && isactivechat) {
+        const confirmEndChat = confirm('Are you sure you want to end the chat?');
+        if (confirmEndChat) {
+            endchat();
+        }
+    } 
+    else if(this.textContent ==='ENDCHAT' && !isactivechat){
+      socket.emit('baharnikalo',socket.id);
+      updateactionbtn('START-NEW-CHAT');
+      const chatMessages = document.getElementById('chatBox');
+    chatMessages.innerHTML='';
+    }
+      else {
+        // Handle starting a new chat here
+        addlist();
+    }
+ socket.on('idbhejo',()=>{
+  socket.emit('idlelo',socket.id);
+  isactivechat=false;
+  updateactionbtn('START-NEW-CHAT');
+  const chatMessages = document.getElementById('typingstatus');
+    chatMessages.innerHTML='';
+ })
+});
 </script>
 </html>
