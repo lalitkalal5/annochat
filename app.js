@@ -70,6 +70,7 @@ socket.on('addlist',(data)=>{
     if (waitingUsers.length > 0 ) {
         const partnerSocketId = waitingUsers.pop();
         const roomName = `room-${roomCounter}`;
+        if (socket.id != partnerSocketId){
 
         socket.join(roomName);
         // partnerSocketId.join(roomName);
@@ -78,11 +79,12 @@ socket.on('addlist',(data)=>{
         socket.room = roomName;
         partnerSocket.room = roomName;
         console.log('user joined in a room',socket.id,partnerSocket.id);
+        console.log(roomName);
         console.log(waitingUsers);
         socket.to(socket.room).emit('waitbf',roomName);
         io.to(socket.room).emit('partnerjoined', roomName);
 
-        roomCounter++;}else{
+        roomCounter++;}}else{
         waitingUsers.push(socket.id);
         socket.emit('waitmf',socket.id);
         console.log('user joined in waiting list',socket.id);
@@ -152,7 +154,9 @@ socket.on('endchat',()=>{
     });
     socket.on('disconnect', () => {
         console.log(socket.id, 'disconnected');
+        waitingUsers.pop(socket.id);
         // users.pop(x);
+
         io.to(socket.room).emit('userleft');
         socket.leave(socket.room);
       const disconnectedRoom = userRooms[socket.id];
@@ -283,11 +287,37 @@ socket.on('endchat',()=>{
       io.to(genral).emit('brdcastg',x);
         }});
 
+        // socket.on('xxx',(data)=>{
+        //   socket.to(socket.room).emit('userleft');
+        //   socket.emit('youleftchat',socket.id);
+        //   kamra = socket.room;
+        //   const room = io.sockets.adapter.rooms[kamra];
+        //   room.forEach(socketId => {
+        //     const socket = io.sockets.sockets[socketId];
+        //     if (socket) {
+        //       socket.leave(kamra);
+        //     }    
+        // })
+// });
+socket.on('xxx', (data) => {
+  io.to(socket.room).emit('userleft');
+  io.to(socket.room).emit('idbhejo');
+  // socket.leave(socket.room);
 });
+socket.on('idlelo',(data)=>{
+  data= socket
+  socket.leave(socket.room);
+})
+socket.on('baharnikalo',(data)=>{
+  waitingUsers.pop(data);
+  socket.emit('totaljanta',totaljanta.length);
+  // console.log(waitingUsers);
+  console.log('jay shree narayan');
+})
+});
+
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log("server listening on 3000");
 });
-
-
