@@ -355,6 +355,13 @@ document.getElementById('actionbutton').addEventListener('click', function () {
   const chatMessages = document.getElementById('typingstatus');
     chatMessages.innerHTML='';
  })
+socket.on('inactive',(data)=>{
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = `sorry Annochat only available in 8 to 10 pm everynight`;
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
+})
 });
 </script>
 </html>
