@@ -247,12 +247,11 @@ chatMessages.appendChild(li);
 chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 socket.on('inactive',(data)=>{
-  const chatMessages = document.getElementById('chatBox');
-  chatMessages.innerHTML='';
-  const li = document.createElement('li');
-  li.textContent = `sorry Annochat only available from 8 to 10 pm everynight  `;
-  li.classList.add('middle');
-  chatMessages.appendChild(li);
+    const chatMessages = document.getElementById('chatBox');
+    const li = document.createElement('li');
+    li.textContent = `sorry Annochat only available in 8 to 10 pm everynight`;
+    li.classList.add('middle');
+    chatMessages.appendChild(li);
 })
    socket.on('totaljanta',(data)=>{
     const janta = document.getElementById('totaljanta');
