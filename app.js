@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
      if (currentHour < activeHoursStart || currentHour > activeHoursEnd) {
         // Restrict access or provide a message
         socket.emit('inactive',currentHour);
-        socket.disconnect();
+        // socket.disconnect();
         return;
     }
     totaljanta.push(socket.id)
