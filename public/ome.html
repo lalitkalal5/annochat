@@ -303,7 +303,7 @@ function filterOffensiveWords(message) {
     ts.innerHTML='';
   })
 socket.on('recieveMessage', (data) => {
-console.log(`recieved msg is ${data.msg}`);
+// console.log(`recieved msg is ${data.msg}`);
 const chatMessages = document.getElementById('chatBox');
 const li = document.createElement('li');
 li.textContent = `Stranger: ${data.msg}`;
@@ -329,15 +329,17 @@ chatMessages.scrollTop = chatMessages.scrollHeight;
         e.returnValue = confirmationMessage;
     }}
 });
-socket.on('inactive',()=>{
-    // console.log('inactive vala aaya bhi ya nahi?')
+socket.on('inactive',() => {
+    // console.log('inactive vala aaya bhi ya nahi?');
     ClearChatBox();
     const chatMessages = document.getElementById('chatBox');
     const li = document.createElement('li');
     li.textContent = `sorry Annochat only available in 8 to 10 pm everynight`;
     li.classList.add('middle');
     chatMessages.appendChild(li);
-})
+
+});
+
 // Add this event listener to your "End Chat" button
 document.getElementById('actionbutton').addEventListener('click', function () {
     if (this.textContent === 'ENDCHAT' && isactivechat) {
