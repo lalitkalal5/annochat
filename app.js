@@ -34,8 +34,8 @@ const userRooms = {};
 const waitingUsersvc = [];
 let roomCountervc = 1000;
 const usergrp ={};
-const activeHoursStart = 18; // 8:00 pM
-const activeHoursEnd = 20; // 10:00pm
+const activeHoursStart = 12; // 8:00 pM
+const activeHoursEnd = 14; // 10:00pm
 
 
 io.on('connection', (socket) => {
