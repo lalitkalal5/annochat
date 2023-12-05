@@ -34,21 +34,21 @@ const userRooms = {};
 const waitingUsersvc = [];
 let roomCountervc = 1000;
 const usergrp ={};
-const activeHoursStart = 13; // 8:00 pM
-const activeHoursEnd = 20; // 10:00pm
+const activeHoursStart = 12; // 8:00 pM
+const activeHoursEnd = 14; // 10:00pm
 
 
 io.on('connection', (socket) => {
     console.log("a user connected", socket.id);
- // const currentHour = new Date().getHours();
+ const currentHour = new Date().getHours();
 
- //     // Check if the current time is within the active hours
- //     if (currentHour < activeHoursStart || currentHour > activeHoursEnd) {
- //        // Restrict access or provide a message
- //        socket.emit('inactive',currentHour);
+     // Check if the current time is within the active hours
+     if (currentHour < activeHoursStart || currentHour > activeHoursEnd) {
+        // Restrict access or provide a message
+        socket.emit('inactive',currentHour);
  //        // socket.disconnect();
- //        return;
- //    }
+        return;
+    }
     totaljanta.push(socket.id)
     socket.on('sendusername',(data) =>{
         console.log(`${data} joined`)
