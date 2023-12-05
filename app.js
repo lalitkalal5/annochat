@@ -36,11 +36,13 @@ let roomCountervc = 1000;
 const usergrp ={};
 const activeHoursStart = 12; // 8:00 pM
 const activeHoursEnd = 14; // 10:00pm
+const moment = require('moment-timezone');
 
 
 io.on('connection', (socket) => {
     console.log("a user connected", socket.id);
- const currentHour = new Date().getHours();
+ // const currentHour = new Date().getHours();
+const currentHour = moment().tz('Asia/Kolkata').hours();    
     console.log(currentHour);
 
      // Check if the current time is within the active hours
