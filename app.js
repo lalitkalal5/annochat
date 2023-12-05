@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
      // Check if the current time is within the active hours
      if (currentHour < activeHoursStart || currentHour > activeHoursEnd) {
         // Restrict access or provide a message
-        socket.emit('inactive',currentHour);
+        socket.emit('inactive');
  //        // socket.disconnect();
         return;
     }
