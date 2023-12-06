@@ -34,8 +34,8 @@ const userRooms = {};
 const waitingUsersvc = [];
 let roomCountervc = 1000;
 const usergrp ={};
-const activeHoursStart = 19; // 8:00 pM
-const activeHoursEnd = 21; // 10:00pm
+const activeHoursStart = 20; // 8:00 pM
+const activeHoursEnd = 22; // 10:00pm
 const moment = require('moment-timezone');
 
 
