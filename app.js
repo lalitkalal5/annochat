@@ -46,13 +46,13 @@ const currentHour = moment().tz('Asia/Kolkata').hours();
     console.log(currentHour);
 
      // Check if the current time is within the active hours
-     if (currentHour < activeHoursStart || currentHour > activeHoursEnd) {
-        // Restrict access or provide a message
-        console.log('not in correct time');
-        socket.emit('inactive');
-         // socket.disconnect();
-        return;
-    }
+    //  if (currentHour < activeHoursStart || currentHour > activeHoursEnd) {
+    //     // Restrict access or provide a message
+    //     console.log('not in correct time');
+    //     socket.emit('inactive');
+    //      // socket.disconnect();
+    //     return;
+    // }
     socket.emit('instruction');
     totaljanta.push(socket.id)
     socket.on('sendusername',(data) =>{
