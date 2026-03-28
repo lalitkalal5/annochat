@@ -8,6 +8,11 @@
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "20.x",
+    "npm": ">=10"
+  },
+  "packageManager": "npm@10",
   "author": "lalit",
   "license": "ISC",
   "dependencies": {
