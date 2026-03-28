@@ -120,9 +120,15 @@ socket.on('addlistvc',(data)=>{
     if (waitingUsersvc.length > 0 ) {
         const partnerSocketId = waitingUsersvc.pop();
         const roomName = `room-${roomCountervc}`;
+        const partnerSocket = io.sockets.sockets.get(partnerSocketId);
+
+        if (!partnerSocket || socket.id === partnerSocketId) {
+            waitingUsersvc.push(socket.id);
+            socket.emit('waitvc');
+            return;
+        }
 
         socket.join(roomName);
-        const partnerSocket = io.sockets.sockets.get(partnerSocketId);
         partnerSocket.join(roomName);
         socket.room = roomName;
         partnerSocket.room = roomName;
@@ -131,15 +137,18 @@ socket.on('addlistvc',(data)=>{
         socket.to(socket.room).emit('abc123',roomName);
         io.to(socket.room).emit('partnerjoined', roomName);
 
-        roomCounter++;}
+        roomCountervc++;}
     else{
         waitingUsersvc.push(socket.id);
+        socket.emit('waitvc');
         console.log('user joined in waiting vc list',socket.id);
         console.log(waitingUsersvc);
         }
 });
 socket.on('ice-candidate',(candidate)=>{
-    socket.to(socket.room).emit('new-ice-candidate',candidate)
+    if (socket.room) {
+        socket.to(socket.room).emit('new-ice-candidate',candidate)
+    }
 });
 
   socket.on('offer', (offer)=>{
@@ -153,12 +162,18 @@ socket.on('answer',(answer)=>{
 socket.on('disconnectfromvc',(data)=>{
 // peerConnection.close();
 // socket.on('addlistvc',(data));
+if (socket.room) {
 socket.to(socket.room).emit('left');
 socket.leave(socket.room);
+socket.room = null;
+}
 console.log("room choota")
 })
 socket.on('leave',()=>{
-    socket.leave(socket.room);
+    if (socket.room) {
+        socket.leave(socket.room);
+        socket.room = null;
+    }
 });   
 socket.on('endchat',()=>{
      socket.disconnect();
